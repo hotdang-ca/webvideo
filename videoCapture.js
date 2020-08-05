@@ -44,22 +44,30 @@ navigator.mediaDevices.getUserMedia({
   }
 
   recorder.onstop = (e) => {
-    console.log('e', e)
-    console.log('chunks', chunks)
+    console.log('e', e);
+    console.log('chunks', chunks);
     const bigVideoBlob = new Blob(chunks, { 'type' : 'video/webm; codecs=webm' })
-    let fd = new FormData()
-    fd.append('fname', 'test.webm')
-    fd.append('data', bigVideoBlob)
+    
+    let fd = new FormData();
+    fd.append('fname', 'test.webm');
+    fd.append('data', bigVideoBlob);
 
-    $.ajax({
-      type: 'POST',
-      url: '/',
-      data: fd,
-      processData: false,
-      contentType: false
-    }).done(function(data) {
-      console.log(data)
+    const fetchUrl = '/';
+    const fetchOptions = {
+        method: 'post',
+        body: fd,
+    };
+
+    fetch(fetchUrl, fetchOptions)
+    .then((response) => {
+        return response.text()
     })
+    .then((responseText) => {
+        console.log('response text', responseText);
+    })
+    .catch((error) => {
+        console.error(error);
+    });
   }
 }).catch(function(err){
   console.log('error', err)
